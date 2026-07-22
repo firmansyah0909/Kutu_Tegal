@@ -428,15 +428,17 @@ function BerandaPage({
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative h-[680px] sm:h-[640px] lg:h-[560px] overflow-hidden bg-[#243B88]">
+  {/* ================= DESKTOP ================= */}
+        <div className="hidden md:block">
+
+        <section className="relative h-[560px] sm:h-[640px] overflow-hidden bg-[#243B88]">
         <img
           src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&h=900&fit=crop&auto=format"
-          alt="Padukuhan Kututegal, Yogyakarta"
+          alt="Padukuhan Kutu Tegal, Yogyakarta"
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f1f4d]/95 via-[#243B88]/80 to-[#243B88]/30" />
-        <div className="absolute inset-0 flex items-start sm:items-center">
+        <div className="absolute inset-0 flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-14 sm:pt-16">
             <div className="max-w-xl">
               <div className="flex items-center gap-2 mb-5">
@@ -445,7 +447,7 @@ function BerandaPage({
               </div>
               <h1 className="text-[2.8rem] sm:text-[3.25rem] font-black text-white leading-tight mb-5">
                 Selamat Datang di<br />
-                <span className="text-[#7C9EF8]">Padukuhan<br />Kututegal</span>
+                <span className="text-[#7C9EF8]">Padukuhan<br />Kutu Tegal</span>
               </h1>
               <p className="text-white/75 text-base sm:text-lg leading-relaxed mb-8 max-w-md">
                 Portal informasi resmi warga. Temukan data penduduk, kegiatan, pengumuman, dan informasi terkini.
@@ -469,7 +471,18 @@ function BerandaPage({
         </div>
 
         {/* Floating stats bar */}
-<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0f1f4d]/80 to-transparent py-6">
+<div className="
+  max-[639px]:relative
+  max-[639px]:mt-8
+  sm:absolute
+  sm:bottom-0
+  left-0
+  right-0
+  bg-gradient-to-t
+  from-[#0f1f4d]/80
+  to-transparent
+  py-6
+">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="grid grid-cols-2 gap-y-5 gap-x-8 sm:flex sm:justify-between">
       {[
@@ -504,9 +517,112 @@ function BerandaPage({
     </div>
   </div>
 </div>
-      </section>
+</section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+</div>
+
+{/* ================= HERO MOBILE ================= */}
+<div className="block md:hidden">
+
+  <section className="bg-[#243B88] relative overflow-hidden">
+
+    <img
+      src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&h=900&fit=crop&auto=format"
+      className="absolute inset-0 w-full h-full object-cover opacity-35"
+    />
+
+    <div className="absolute inset-0 bg-gradient-to-r from-[#0f1f4d]/95 via-[#243B88]/80 to-[#243B88]/30" />
+
+    <div className="relative z-10 px-5 pt-24 pb-10">
+
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#7C9EF8]" />
+
+        <span className="text-[#7C9EF8] text-[11px] font-bold uppercase tracking-wider">
+          Sinduadi · Mlati · Sleman · D.I. Yogyakarta
+        </span>
+      </div>
+
+      <h1 className="text-[34px] sm:text-[46px] leading-[40px] sm:leading-[50px] font-black text-white">
+        Selamat Datang
+        <br />
+        <span className="text-[#7C9EF8]">
+          di Padukuhan 
+          <br />
+          Kutu Tegal
+        </span>
+      </h1>
+
+      <p className="mt-6 text-white/80 leading-8">
+        Portal informasi resmi warga. Temukan data penduduk,
+        kegiatan, pengumuman, dan informasi terkini.
+      </p>
+
+      <div className="space-y-3 mt-8">
+
+        <button
+          onClick={() => setPage("penduduk")}
+          className="w-full bg-white text-[#243B88] font-bold py-3 rounded-2xl"
+        >
+          Lihat Data Penduduk
+        </button>
+
+        <button
+          onClick={() => setPage("profil")}
+          className="w-full bg-white/10 border border-white/30 text-white font-semibold py-3 rounded-2xl"
+        >
+          Profil Padukuhan
+        </button>
+
+      </div>
+
+      <div className="grid grid-cols-2 gap-y-8 mt-10 text-center">
+
+        <div>
+          <div className="text-2xl font-black text-white">
+            {totalPenduduk.toLocaleString("id-ID")}
+          </div>
+          <div className="text-white/60 text-sm">
+            Penduduk
+          </div>
+        </div>
+
+        <div>
+          <div className="text-2xl font-black text-white">
+            {totalKK.toLocaleString("id-ID")}
+          </div>
+          <div className="text-white/60 text-sm">
+            Kepala Keluarga
+          </div>
+        </div>
+
+        <div>
+          <div className="text-2xl font-extrabold text-white">
+            13 RT
+          </div>
+          <div className="text-white/60 text-xs mt-1">
+            4 RW
+          </div>
+        </div>
+
+        <div>
+          <div className="text-2xl font-extrabold text-white">
+            Sleman
+          </div>
+          <div className="text-white/60 text-xs mt-1">
+            D.I. Yogyakarta
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Quick Menu */}
         <section className="py-12">
           <SectionTitle title="Menu Utama" subtitle="Akses cepat informasi padukuhan" />

@@ -1,0 +1,5 @@
+@media (max-width: 639px) {
+  .hero-mobile {
+    height: 720px !important;
+  }
+}
