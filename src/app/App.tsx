@@ -15,6 +15,16 @@ import {
 function formatTanggalIndonesia(tanggal: string) {
   if (!tanggal) return "";
 
+  // Format ISO dari Google Sheets
+  if (tanggal.includes("T")) {
+    return new Date(tanggal).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
+  // Format lama dd/mm/yyyy
   const [hari, bulan, tahun] = tanggal.split("/").map(Number);
 
   return new Date(tahun, bulan - 1, hari).toLocaleDateString("id-ID", {
@@ -22,6 +32,27 @@ function formatTanggalIndonesia(tanggal: string) {
     month: "long",
     year: "numeric",
   });
+}
+function getStatusKegiatan(
+  tanggalMulai: string,
+  tanggalSelesai: string
+): "akan" | "berlangsung" | "selesai" {
+
+  if (!tanggalMulai || !tanggalSelesai) return "akan";
+
+  const sekarang = new Date();
+
+  const mulai = new Date(tanggalMulai);
+  mulai.setHours(0, 0, 0, 0);
+
+  const selesai = new Date(tanggalSelesai);
+  selesai.setHours(23, 59, 59, 999);
+
+  if (sekarang < mulai) return "akan";
+
+  if (sekarang > selesai) return "selesai";
+
+  return "berlangsung";
 }
 
 // ── Types ──────────────────────────────────────────────────
@@ -132,11 +163,11 @@ const GALERI_ALBUM: Album[] = [
 ]
 
 const RT_LIST: RT[] = [
-  { id: "01", ketua: "Suwardi Priyanto", hp: "0812-3456-7890", kk: 68, penduduk: 245, laki: 122, perempuan: 123, dusun: "Kututegal Barat", deskripsi: "RT 01 meliputi wilayah Kututegal Barat, dikenal dengan semangat gotong royong yang tinggi dan aktif dalam berbagai kegiatan padukuhan." },
-  { id: "02", ketua: "Margono Santoso", hp: "0813-5678-9012", kk: 72, penduduk: 267, laki: 134, perempuan: 133, dusun: "Kututegal Tengah", deskripsi: "RT 02 berada di pusat padukuhan, dekat dengan Balai Padukuhan dan berbagai fasilitas umum utama." },
-  { id: "03", ketua: "Bambang Triyono", hp: "0814-2345-6789", kk: 65, penduduk: 231, laki: 115, perempuan: 116, dusun: "Kututegal Utara", deskripsi: "RT 03 di bagian utara padukuhan memiliki potensi pertanian yang sangat baik dengan lahan sawah yang luas." },
-  { id: "04", ketua: "Agus Widodo", hp: "0815-6789-0123", kk: 71, penduduk: 258, laki: 129, perempuan: 129, dusun: "Kututegal Selatan", deskripsi: "RT 04 aktif dalam kegiatan olahraga dan memiliki lapangan voli representatif yang sering digunakan warga." },
-  { id: "05", ketua: "Sunarto Wibowo", hp: "0816-9012-3456", kk: 66, penduduk: 246, laki: 123, perempuan: 123, dusun: "Kututegal Timur", deskripsi: "RT 05 dikenal dengan potensi UMKM yang kuat dan kerajinan tangan warganya yang beragam." },
+  { id: "01", ketua: "Suwardi Priyanto", hp: "0812-3456-7890", kk: 68, penduduk: 245, laki: 122, perempuan: 123, dusun: "Kutu Tegal Barat", deskripsi: "RT 01 meliputi wilayah Kutu Tegal Barat, dikenal dengan semangat gotong royong yang tinggi dan aktif dalam berbagai kegiatan padukuhan." },
+  { id: "02", ketua: "Margono Santoso", hp: "0813-5678-9012", kk: 72, penduduk: 267, laki: 134, perempuan: 133, dusun: "Kutu Tegal Tengah", deskripsi: "RT 02 berada di pusat padukuhan, dekat dengan Balai Padukuhan dan berbagai fasilitas umum utama." },
+  { id: "03", ketua: "Bambang Triyono", hp: "0814-2345-6789", kk: 65, penduduk: 231, laki: 115, perempuan: 116, dusun: "Kutu Tegal Utara", deskripsi: "RT 03 di bagian utara padukuhan memiliki potensi pertanian yang sangat baik dengan lahan sawah yang luas." },
+  { id: "04", ketua: "Agus Widodo", hp: "0815-6789-0123", kk: 71, penduduk: 258, laki: 129, perempuan: 129, dusun: "Kutu Tegal Selatan", deskripsi: "RT 04 aktif dalam kegiatan olahraga dan memiliki lapangan voli representatif yang sering digunakan warga." },
+  { id: "05", ketua: "Sunarto Wibowo", hp: "0816-9012-3456", kk: 66, penduduk: 246, laki: 123, perempuan: 123, dusun: "Kutu Tegal Timur", deskripsi: "RT 05 dikenal dengan potensi UMKM yang kuat dan kerajinan tangan warganya yang beragam." },
 ]
 
 // ── Helpers ────────────────────────────────────────────────
@@ -208,7 +239,7 @@ function Navbar({ page, setPage }: { page: Page; setPage: (p: Page) => void }) {
               <Landmark className="w-4.5 h-4.5 text-white" />
             </div>
             <div className="hidden sm:block text-left">
-              <div className="text-[13px] font-extrabold text-[#243B88] leading-none">Padukuhan Kututegal</div>
+              <div className="text-[13px] font-extrabold text-[#243B88] leading-none">Padukuhan Kutu Tegal</div>
               <div className="text-[11px] text-[#6172A0] mt-0.5">Sistem Informasi</div>
             </div>
           </button>
@@ -285,12 +316,12 @@ function Footer({ setPage }: { setPage: (p: Page) => void }) {
                 <Landmark className="w-5 h-5 text-white" />
               </div>
               <div>
-                <div className="font-extrabold text-white text-sm">Padukuhan Kututegal</div>
+                <div className="font-extrabold text-white text-sm">Padukuhan Kutu Tegal</div>
                 <div className="text-[#94A3B8] text-xs">Sinduadi · Mlati · Sleman</div>
               </div>
             </div>
             <p className="text-[#94A3B8] text-sm leading-relaxed">
-              Portal informasi resmi yang menyediakan data dan informasi terkini untuk seluruh warga Padukuhan Kututegal.
+              Portal informasi resmi yang menyediakan data dan informasi terkini untuk seluruh warga Padukuhan Kutu Tegal.
             </p>
           </div>
 
@@ -310,7 +341,7 @@ function Footer({ setPage }: { setPage: (p: Page) => void }) {
             <div className="space-y-3 text-sm text-[#CBD5E1]">
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#7C9EF8] mt-0.5 flex-shrink-0" />
-                <span>Dusun Kututegal, Sinduadi, Mlati, Sleman, D.I. Yogyakarta</span>
+                <span>Dusun Kutu Tegal, Sinduadi, Mlati, Sleman, D.I. Yogyakarta</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#7C9EF8] flex-shrink-0" />
@@ -349,6 +380,9 @@ function BerandaPage({
   const kegiatan = website?.kegiatan || [];
   const pendudukList = website?.penduduk || [];
   const profil = website?.profil || {};
+const heroImage = "/images/hero-beranda.png";
+console.log(profil.Foto);
+console.log(heroImage);
   const pengumuman = website?.pengumuman || [];
 
   const totalPenduduk = pendudukList.length;
@@ -433,7 +467,7 @@ function BerandaPage({
 
         <section className="relative h-[560px] sm:h-[640px] overflow-hidden bg-[#243B88]">
         <img
-          src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&h=900&fit=crop&auto=format"
+            src="/images/hero-beranda.png"
           alt="Padukuhan Kutu Tegal, Yogyakarta"
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
@@ -526,10 +560,11 @@ function BerandaPage({
 
   <section className="bg-[#243B88] relative overflow-hidden">
 
-    <img
-      src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&h=900&fit=crop&auto=format"
-      className="absolute inset-0 w-full h-full object-cover opacity-35"
-    />
+<img
+  src="/images/hero-beranda.png"
+  alt="Hero Beranda"
+  className="absolute inset-0 w-full h-full object-cover opacity-35"
+/>
 
     <div className="absolute inset-0 bg-gradient-to-r from-[#0f1f4d]/95 via-[#243B88]/80 to-[#243B88]/30" />
 
@@ -698,7 +733,7 @@ function BerandaPage({
               </div>
               <div className="space-y-4">
                 {kegiatan.slice(0, 3).map((k: any) => {
-                  const cs = catStyle(k.kategori)
+                  const cs = catStyle(k["Kategori"] || "Umum");
                   return (
                     <div
                       key={k.id}
@@ -706,13 +741,17 @@ function BerandaPage({
                       className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(36,59,136,0.07)] overflow-hidden flex cursor-pointer hover:shadow-[0_6px_24px_rgba(36,59,136,0.13)] transition-shadow group"
                     >
                       <div className="w-24 sm:w-28 flex-shrink-0 overflow-hidden bg-[#EEF2FF]">
-                        <img src={k.img} alt={k.judul} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <img src={getImageUrl(k["Foto"])} alt={k.judul} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                       <div className="p-4 flex-1 min-w-0">
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: cs.bg, color: cs.text }}>{k.kategori}</span>
-                        <h3 className="font-bold text-[#1A2744] text-sm mt-2 line-clamp-2 leading-snug">{k.judul}</h3>
+                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: cs.bg, color: cs.text }}>{k["Kategori"] || "Umum"}</span>
+                        <h3 className="font-bold text-[#1A2744] text-sm mt-2 line-clamp-2 leading-snug">{k["Judul"]}</h3>
                         <div className="flex items-center gap-1 mt-2 text-[#6172A0] text-xs">
-                          <Clock className="w-3 h-3" />{k.tanggal}
+                          <Clock className="w-3 h-3" />
+
+{formatTanggalIndonesia(k["Tanggal Mulai"])}
+{" - "}
+{formatTanggalIndonesia(k["Tanggal Selesai"])}
                         </div>
                       </div>
                     </div>
@@ -734,7 +773,7 @@ function BerandaPage({
               </div>
                 <div className="space-y-3">
                   {pengumuman.slice(0, 4).map((p: any, index: number) => {
-                  const cs = catStyle(p["Kategori"] || "Informasi")
+                  const cs = catStyle(p["Kategori"] || "Informasi");
                   return (
                     <div
                       key={index}
@@ -744,15 +783,15 @@ function BerandaPage({
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: cs.bg, color: cs.text }}>{p.kategori}</span>
-                            {p.penting && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600">Penting</span>}
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: cs.bg, color: cs.text }}>{p["Kategori"] || "Informasi"}</span>
+                            {p["Penting"] && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600">Penting</span>}
                           </div>
-                          <h3 className="font-semibold text-[#1A2744] text-sm leading-snug line-clamp-2">{p.judul}</h3>
+                          <h3 className="font-semibold text-[#1A2744] text-sm leading-snug line-clamp-2">{p["Judul"]}</h3>
                         </div>
                         <ChevronRight className="w-4 h-4 text-[#6172A0] flex-shrink-0 mt-1" />
                       </div>
                       <div className="flex items-center gap-1 mt-2 text-[#6172A0] text-xs">
-                        <Clock className="w-3 h-3" />{p.tanggal}
+                        <Clock className="w-3 h-3" />{formatTanggalIndonesia(p["Tanggal"])}
                       </div>
                     </div>
                   )
@@ -811,6 +850,11 @@ function ProfilPage({
     profil["Misi 3"],
     profil["Misi 4"],
   ].filter(Boolean);
+const fileId = profil?.Foto?.match(/\/d\/([^/]+)/)?.[1];
+
+const profilImage = fileId
+  ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`
+  : "";
 
   const potensi: {
     icon: React.ElementType;
@@ -821,25 +865,25 @@ function ProfilPage({
     {
       icon: Leaf,
       judul: profil["Potensi 1"] || "Potensi 1",
-      deskripsi: "Potensi unggulan Padukuhan Kututegal.",
+      deskripsi: "Potensi unggulan Padukuhan Kutu Tegal.",
       color: "#0F766E",
     },
     {
       icon: Award,
       judul: profil["Potensi 2"] || "Potensi 2",
-      deskripsi: "Potensi unggulan Padukuhan Kututegal.",
+      deskripsi: "Potensi unggulan Padukuhan Kutu Tegal.",
       color: "#D97706",
     },
     {
       icon: Globe,
       judul: profil["Potensi 3"] || "Potensi 3",
-      deskripsi: "Potensi unggulan Padukuhan Kututegal.",
+      deskripsi: "Potensi unggulan Padukuhan Kutu Tegal.",
       color: "#0369A1",
     },
     {
       icon: Shield,
       judul: profil["Potensi 4"] || "Potensi 4",
-      deskripsi: "Potensi unggulan Padukuhan Kututegal.",
+      deskripsi: "Potensi unggulan Padukuhan Kutu Tegal.",
       color: "#7C3AED",
     },
   ];
@@ -847,10 +891,10 @@ function ProfilPage({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
 {/* Hero */}
 <div className="relative rounded-3xl overflow-hidden h-60 sm:h-72 mb-10 bg-[#243B88]">
-
-  <img
-    src={profil?.Foto}
-    alt={profil?.["Nama Padukuhan"]}
+  
+<img
+  src={profilImage}
+  alt={profil["Nama Padukuhan"]}
     className="absolute inset-0 w-full h-full object-cover opacity-30"
   />
 
@@ -1040,11 +1084,11 @@ function ProfilPage({
                 height="100%"
                 style={{ border: 0 }}
                 loading="lazy"
-                title="Peta Padukuhan Kututegal"
+                title="Peta Padukuhan Kutu Tegal"
               />
             </div>
             <div className="px-5 py-3">
-              <p className="text-[#6172A0] text-xs">Dusun Kututegal, Sinduadi, Mlati, Sleman, DIY 55561</p>
+              <p className="text-[#6172A0] text-xs">Dusun Kutu Tegal, Sinduadi, Mlati, Sleman, DIY 55561</p>
             </div>
           </div>
         </div>
@@ -1258,7 +1302,7 @@ const RT_BAR_DATA = React.useMemo(() => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
       <div className="mb-8">
         <h1 className="text-3xl font-black text-[#1A2744]">Data Penduduk</h1>
-        <p className="text-[#6172A0] mt-1">Informasi kependudukan Padukuhan Kututegal</p>
+        <p className="text-[#6172A0] mt-1">Informasi kependudukan Padukuhan Kutu Tegal</p>
       </div>
 
 {/* Stats */}
@@ -1392,7 +1436,7 @@ const RT_BAR_DATA = React.useMemo(() => {
   </h3>
 
   <p className="text-[#6172A0] mt-2 max-w-2xl mx-auto">
-    Untuk menjaga keamanan dan privasi warga Padukuhan Kututegal,
+    Untuk menjaga keamanan dan privasi warga Padukuhan Kutu Tegal,
     data individu seperti nama, NIK, alamat, dan informasi pribadi
     tidak ditampilkan pada website publik.
   </p>
@@ -1432,7 +1476,7 @@ function KegiatanPage({
   <div className="relative h-64 sm:h-80 bg-[#EEF2FF]">
 
     <img
-      src={selected["Foto"]}
+      src={getImageUrl(selected["Foto"])}
       alt={selected["Judul"]}
       className="w-full h-full object-cover"
     />
@@ -1497,7 +1541,7 @@ function KegiatanPage({
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
       <div className="mb-10">
         <h1 className="text-3xl font-black text-[#1A2744]">Kegiatan Padukuhan</h1>
-        <p className="text-[#6172A0] mt-1">Aktivitas dan kegiatan warga Padukuhan Kututegal</p>
+        <p className="text-[#6172A0] mt-1">Aktivitas dan kegiatan warga Padukuhan Kutu Tegal</p>
       </div>
 
       {/* Timeline */}
@@ -1505,17 +1549,38 @@ function KegiatanPage({
         <div className="absolute left-4 sm:left-7 top-2 bottom-2 w-px bg-gradient-to-b from-[#243B88] via-[#C7D7FF] to-transparent" />
         <div className="space-y-8">
                 {kegiatan.map((k, index) => {
-        const cs = catStyle(k["Kategori"] || "Umum")
+            const cs = catStyle(k["Kategori"] || "Umum");
 
-        return (
+            const status = getStatusKegiatan(
+  k["Tanggal Mulai"],
+  k["Tanggal Selesai"]
+);
+
+            return (
           <div key={index} className="relative pl-12 sm:pl-20">
-            <div className="absolute left-1.5 sm:left-4 top-5 w-5 h-5 rounded-full bg-[#243B88] border-4 border-white shadow-[0_0_0_3px_#D0D9FF] z-10" />
+            <div
+className={`absolute left-1.5 sm:left-4 top-5 w-5 h-5 rounded-full border-4 border-white shadow-[0_0_0_3px_#D0D9FF] z-10 ${
+  status === "akan"
+    ? "bg-blue-600"
+    : status === "berlangsung"
+    ? "bg-green-500"
+    : "bg-gray-400"
+}`}
+/>
             <div className="absolute left-[3.25rem] sm:left-[4.85rem] top-6 h-px w-4 bg-[#C7D7FF]" />
 
-            <button
-              onClick={() => setSelected(k)}
-              className="w-full bg-white rounded-3xl overflow-hidden shadow-[0_4px_20px_rgba(36,59,136,0.07)] hover:shadow-[0_8px_32px_rgba(36,59,136,0.14)] transition-all group text-left hover:-translate-y-0.5"
-            >
+          <button
+            onClick={() => setSelected(k)}
+className={`w-full rounded-3xl overflow-hidden transition-all group shadow-[0_4px_20px_rgba(36,59,136,0.07)]
+${
+  status === "selesai"
+    ? "bg-gray-50 opacity-75"
+    : status === "berlangsung"
+    ? "bg-green-50 border border-green-200"
+    : "bg-white border border-blue-100"
+}
+hover:shadow-[0_8px_32px_rgba(36,59,136,0.14)]`}
+          >
               <div className="flex flex-col sm:flex-row">
 
                 <div className="w-full sm:w-52 h-44 sm:h-auto flex-shrink-0 bg-[#EEF2FF] overflow-hidden">
@@ -1547,15 +1612,35 @@ function KegiatanPage({
                       {" • "}
                       {k["Jam"]}
                     </span>
-                  </div>
+</div>
 
-                  <h3 className="font-extrabold text-[#1A2744] text-lg mb-2 group-hover:text-[#243B88] transition-colors leading-snug">
-                    {k["Judul"]}
-                  </h3>
+<div className="flex items-center gap-2 mb-2">
+  {status === "akan" && (
+    <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
+      📅 Akan Datang
+    </span>
+  )}
 
-                  <p className="text-[#6172A0] text-sm leading-relaxed mb-4 line-clamp-2">
-                    {k["Ringkasan"]}
-                  </p>
+  {status === "berlangsung" && (
+    <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
+      🟢 Sedang Berlangsung
+    </span>
+  )}
+
+  {status === "selesai" && (
+    <span className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold">
+      ✓ Selesai
+    </span>
+  )}
+</div>
+
+<h3 className="font-extrabold text-[#1A2744] text-lg mb-2 group-hover:text-[#243B88] transition-colors leading-snug">
+  {k["Judul"]}
+</h3>
+
+<p className="text-[#6172A0] text-sm leading-relaxed mb-4 line-clamp-2">
+  {k["Ringkasan"]}
+</p>
 
                   <div className="flex flex-wrap gap-4 text-xs text-[#6172A0] mb-4">
                     <span className="flex items-center gap-1.5">
@@ -1601,7 +1686,7 @@ function PengumumanPage({
           Pengumuman
         </h1>
         <p className="text-[#6172A0] mt-1">
-          Informasi dan pengumuman resmi Padukuhan Kututegal
+          Informasi dan pengumuman resmi Padukuhan Kutu Tegal
         </p>
       </div>
 
@@ -1653,7 +1738,7 @@ function PengumumanPage({
 
                     <div className="flex items-center gap-1.5 mt-2 text-[#6172A0] text-xs">
                       <Clock className="w-3 h-3" />
-                      {p["Tanggal"]}
+                      {formatTanggalIndonesia(p["Tanggal"])}
                     </div>
                   </div>
 
@@ -1785,7 +1870,7 @@ function GaleriPage({
         <div>
           <div className="mb-10">
             <h1 className="text-3xl font-black text-[#1A2744]">Galeri Foto</h1>
-            <p className="text-[#6172A0] mt-1">Album dokumentasi kegiatan Padukuhan Kututegal</p>
+            <p className="text-[#6172A0] mt-1">Album dokumentasi kegiatan Padukuhan Kutu Tegal</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {GALERI_ALBUM.map(album => (
@@ -1842,7 +1927,7 @@ function StrukturRTPage({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
       <div className="mb-10">
         <h1 className="text-3xl font-black text-[#1A2744]">Struktur RT</h1>
-        <p className="text-[#6172A0] mt-1">Organisasi Rukun Tetangga Padukuhan Kututegal</p>
+        <p className="text-[#6172A0] mt-1">Organisasi Rukun Tetangga Padukuhan Kutu Tegal</p>
       </div>
 
       {/* Dukuh banner */}
@@ -1851,7 +1936,7 @@ function StrukturRTPage({
         <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/5 rounded-full" />
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
-            <div className="text-white/60 text-sm mb-1 font-medium">Padukuhan Kututegal</div>
+            <div className="text-white/60 text-sm mb-1 font-medium">Padukuhan Kutu Tegal</div>
             <h2 className="text-2xl sm:text-3xl font-extrabold">Pengurus Padukuhan</h2>
             <div className="mt-4 space-y-1.5">
               <div className="text-sm text-white/80">
@@ -2105,7 +2190,7 @@ const generasiData = [
       <div className="relative bg-[#243B88] rounded-3xl p-8 sm:p-10 text-white mb-8 overflow-hidden">
         <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 75% 50%, rgba(124,158,248,0.25) 0%, transparent 60%)" }} />
         <div className="relative">
-          <div className="text-white/60 text-sm mb-1">Padukuhan Kututegal</div>
+          <div className="text-white/60 text-sm mb-1">Padukuhan Kutu Tegal</div>
           <h1 className="text-3xl sm:text-4xl font-black">
   RT {rt["RT"]}
 </h1>
@@ -2207,7 +2292,7 @@ const generasiData = [
           </h3>
 
           <p className="text-[#6172A0] leading-relaxed max-w-2xl mx-auto">
-            Untuk menjaga privasi warga Padukuhan Kututegal, data individu seperti
+            Untuk menjaga privasi warga Padukuhan Kutu Tegal, data individu seperti
             nama, NIK, tanggal lahir, dan informasi pribadi lainnya tidak
             ditampilkan pada website publik.
           </p>
