@@ -384,6 +384,7 @@ const heroImage = "/images/hero-beranda.png";
 console.log(profil.Foto);
 console.log(heroImage);
   const pengumuman = website?.pengumuman || [];
+  const galeri = website?.galeri || [];
 
   const totalPenduduk = pendudukList.length;
 
@@ -813,24 +814,36 @@ console.log(heroImage);
             </button>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {(website?.galeri || [])
+{(website?.galeri || [])
   .filter((album: any) => album.Aktif === "YA")
   .slice(0, 6)
   .map((album: any, index: number) => (
-              <button
-                key={album.id}
-                onClick={() => setPage("galeri")}
-                className="group relative rounded-2xl overflow-hidden aspect-square bg-[#EEF2FF]"
-              >
-                <img src={album.cover} alt={album.nama} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-[#1A2744]/0 group-hover:bg-[#1A2744]/50 transition-colors flex items-end p-2">
-                  <div className="translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all text-left">
-                    <div className="text-white text-[10px] font-bold leading-tight line-clamp-2">{album.nama}</div>
-                    <div className="text-white/70 text-[9px]">{album.jumlah} foto</div>
-                  </div>
-                </div>
-              </button>
-            ))}
+    <button
+      key={index}
+      onClick={() => setPage("galeri")}
+      className="group relative rounded-2xl overflow-hidden aspect-square bg-[#EEF2FF]"
+    >
+      <img
+        src={album.Thumbnail}
+        alt={album["Judul Album"]}
+        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+      />
+
+      <div className="absolute inset-0 bg-[#1A2744]/0 group-hover:bg-[#1A2744]/50 transition-colors flex items-end p-2">
+        <div className="translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all text-left">
+
+          <div className="text-white text-[10px] font-bold leading-tight line-clamp-2">
+            {album["Judul Album"]}
+          </div>
+
+          <div className="text-white/70 text-[9px]">
+            {album["Jumlah Foto"]} Foto
+          </div>
+
+        </div>
+      </div>
+    </button>
+))}
           </div>
         </section>
       </div>
