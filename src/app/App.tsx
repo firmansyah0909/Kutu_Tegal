@@ -813,7 +813,10 @@ console.log(heroImage);
             </button>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {GALERI_ALBUM.map(album => (
+            {(website?.galeri || [])
+  .filter((album: any) => album.Aktif === "YA")
+  .slice(0, 6)
+  .map((album: any, index: number) => (
               <button
                 key={album.id}
                 onClick={() => setPage("galeri")}
