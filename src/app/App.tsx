@@ -1793,6 +1793,7 @@ function GaleriPage({
 }: {
   galeri: any[];
 }) {
+  console.log("GALERI", galeri);
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null)
   const [lightboxIdx, setLightboxIdx] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -1872,29 +1873,60 @@ function GaleriPage({
             <h1 className="text-3xl font-black text-[#1A2744]">Galeri Foto</h1>
             <p className="text-[#6172A0] mt-1">Album dokumentasi kegiatan Padukuhan Kutu Tegal</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {GALERI_ALBUM.map(album => (
-              <button
-                key={album.id}
-                onClick={() => setSelectedAlbum(album)}
-                className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(36,59,136,0.08)] hover:shadow-[0_8px_36px_rgba(36,59,136,0.15)] hover:-translate-y-1.5 transition-all text-left"
-              >
-                <div className="relative h-52 overflow-hidden bg-[#EEF2FF]">
-                  <img src={album.cover} alt={album.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute top-3 right-3 bg-[#1A2744]/65 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Camera className="w-3.5 h-3.5" />{album.jumlah} foto
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A2744]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-extrabold text-[#1A2744] text-base group-hover:text-[#243B88] transition-colors">{album.nama}</h3>
-                  <p className="text-[#6172A0] text-sm mt-1.5 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" />{album.tanggal}
-                  </p>
-                </div>
-              </button>
-            ))}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+  {galeri
+    .filter((album: any) => album.Aktif === "YA")
+    .map((album: any, index: number) => (
+
+      <button
+        key={index}
+        onClick={() =>
+          setSelectedAlbum({
+            id: index,
+            nama: album["Judul Album"],
+            tanggal: album.Tanggal,
+            jumlah: Number(album["Jumlah Foto"]),
+            cover: album.Thumbnail,
+            fotos: album.Foto || [],
+          })
+        }
+        className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_24px_rgba(36,59,136,0.08)] hover:shadow-[0_8px_36px_rgba(36,59,136,0.15)] hover:-translate-y-1.5 transition-all text-left"
+      >
+
+        <div className="relative h-52 overflow-hidden bg-[#EEF2FF]">
+
+          <img
+            src={album.Thumbnail}
+            alt={album["Judul Album"]}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+
+          <div className="absolute top-3 right-3 bg-[#1A2744]/65 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Camera className="w-3.5 h-3.5" />
+            {album["Jumlah Foto"]} Foto
           </div>
+
+        </div>
+
+        <div className="p-5">
+
+          <h3 className="font-extrabold text-[#1A2744] text-base">
+            {album["Judul Album"]}
+          </h3>
+
+          <p className="text-[#6172A0] text-sm mt-1.5 flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5" />
+            {album.Tanggal}
+          </p>
+
+        </div>
+
+      </button>
+
+    ))}
+
+</div>
         </div>
       )}
     </div>
