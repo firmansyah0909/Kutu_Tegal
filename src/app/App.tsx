@@ -429,28 +429,28 @@ function BerandaPage({
   return (
     <div>
       {/* Hero */}
-      <section className="relative h-[560px] sm:h-[640px] overflow-hidden bg-[#243B88]">
+      <section className="relative h-[680px] sm:h-[640px] lg:h-[560px] overflow-hidden bg-[#243B88]">
         <img
           src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1920&h=900&fit=crop&auto=format"
           alt="Padukuhan Kututegal, Yogyakarta"
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f1f4d]/95 via-[#243B88]/80 to-[#243B88]/30" />
-        <div className="absolute inset-0 flex items-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
+        <div className="absolute inset-0 flex items-start sm:items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-14 sm:pt-16">
             <div className="max-w-xl">
               <div className="flex items-center gap-2 mb-5">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#7C9EF8]" />
                 <span className="text-[#7C9EF8] text-xs font-bold tracking-widest uppercase">Sinduadi · Mlati · Sleman · D.I. Yogyakarta</span>
               </div>
-              <h1 className="text-4xl sm:text-[3.25rem] font-black text-white leading-tight mb-5">
+              <h1 className="text-[2.8rem] sm:text-[3.25rem] font-black text-white leading-tight mb-5">
                 Selamat Datang di<br />
                 <span className="text-[#7C9EF8]">Padukuhan<br />Kututegal</span>
               </h1>
               <p className="text-white/75 text-base sm:text-lg leading-relaxed mb-8 max-w-md">
                 Portal informasi resmi warga. Temukan data penduduk, kegiatan, pengumuman, dan informasi terkini.
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 mb-20 sm:mb-0">
                 <button
                   onClick={() => setPage("penduduk")}
                   className="bg-white text-[#243B88] font-bold px-6 py-3 rounded-2xl hover:bg-[#EEF2FF] transition-all shadow-lg shadow-black/20 text-sm"
@@ -471,7 +471,7 @@ function BerandaPage({
         {/* Floating stats bar */}
 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0f1f4d]/80 to-transparent py-6">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex gap-6 sm:gap-12">
+    <div className="grid grid-cols-2 gap-y-5 gap-x-8 sm:flex sm:justify-between">
       {[
         {
           v: totalPenduduk.toLocaleString("id-ID"),
@@ -490,7 +490,9 @@ function BerandaPage({
           l: "D.I. Yogyakarta",
         },
       ].map((s, i) => (
-        <div key={i}>
+        <div 
+          key={i}
+          className="text-center">
           <div className="text-xl sm:text-2xl font-extrabold text-white">
             {s.v}
           </div>
