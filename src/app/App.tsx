@@ -1794,19 +1794,14 @@ function GaleriPage({
     className="max-w-[88vw] max-h-[85vh]"
     onClick={(e) => e.stopPropagation()}
   >
-    <video
-      controls
-      autoPlay
-      playsInline
-      preload="metadata"
-      className="max-w-[88vw] max-h-[85vh] object-contain rounded-2xl"
-    >
-      <source
-        src={selectedAlbum.fotos[lightboxIdx].url}
-        type="video/mp4"
-      />
-      Browser Anda tidak mendukung video.
-    </video>
+<video
+  src={selectedAlbum.fotos[lightboxIdx].url}
+  controls
+  autoPlay
+  playsInline
+  preload="metadata"
+  className="max-w-[88vw] max-h-[85vh] object-contain rounded-2xl"
+/>
   </div>
 ) : (
   <img
