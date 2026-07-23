@@ -787,7 +787,20 @@ console.log(heroImage);
           </div>
 
           <div className="text-white/70 text-[9px]">
-            {album["Jumlah Foto"]} Foto
+          {(() => {
+  const foto = (album.Foto || []).filter((f: any) => f.type === "image").length;
+  const video = (album.Foto || []).filter((f: any) => f.type === "video").length;
+
+  if (foto > 0 && video === 0) {
+    return `${foto} Foto`;
+  }
+
+  if (video > 0 && foto === 0) {
+    return `${video} Video`;
+  }
+
+  return `${foto} Foto • ${video} Video`;
+})()}
           </div>
 
         </div>
@@ -1837,7 +1850,21 @@ const openLightbox = (idx: number) => {
     year: "numeric",
   })}
   <span className="mx-2 text-[#C7D7FF]">·</span>
-              <Camera className="w-3.5 h-3.5" />{selectedAlbum.jumlah} foto
+              <Camera className="w-3.5 h-3.5" />
+{(() => {
+  const foto = selectedAlbum.fotos.filter(f => f.type === "image").length;
+  const video = selectedAlbum.fotos.filter(f => f.type === "video").length;
+
+  if (foto > 0 && video === 0) {
+    return `${foto} Foto`;
+  }
+
+  if (video > 0 && foto === 0) {
+    return `${video} Video`;
+  }
+
+  return `${foto} Foto • ${video} Video`;
+})()}
             </p>
           </div>
           <div className="columns-2 md:columns-3 gap-3 space-y-3">
@@ -1912,7 +1939,20 @@ const openLightbox = (idx: number) => {
 
           <div className="absolute top-3 right-3 bg-[#1A2744]/65 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
             <Camera className="w-3.5 h-3.5" />
-            {album["Jumlah Foto"]} Foto
+{(() => {
+  const foto = (album.Foto || []).filter((f: any) => f.type === "image").length;
+  const video = (album.Foto || []).filter((f: any) => f.type === "video").length;
+
+  if (foto > 0 && video === 0) {
+    return `${foto} Foto`;
+  }
+
+  if (video > 0 && foto === 0) {
+    return `${video} Video`;
+  }
+
+  return `${foto} Foto • ${video} Video`;
+})()}
           </div>
 
         </div>
@@ -2426,6 +2466,7 @@ useEffect(() => {
 useEffect(() => {
   localStorage.setItem("page", page);
 }, [page]);
+
 useEffect(() => {
   window.history.pushState({ page }, "");
 }, [page]);
