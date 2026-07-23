@@ -2418,17 +2418,39 @@ useEffect(() => {
 
   ambilData();
 }, []);
+
+useEffect(() => {
+  window.history.replaceState({ page: "beranda" }, "");
+}, []);
+
 useEffect(() => {
   localStorage.setItem("page", page);
 }, [page]);
+useEffect(() => {
+  window.history.pushState({ page }, "");
+}, [page]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (page === "detail-rt" && !selectedRT) {
-      setPage("struktur-rt");
+useEffect(() => {
+  const handlePopState = (e: PopStateEvent) => {
+    if (e.state?.page) {
+      setPage(e.state.page);
     }
-  }, [page, selectedRT]);
+  };
+
+  window.addEventListener("popstate", handlePopState);
+
+  return () => {
+    window.removeEventListener("popstate", handlePopState);
+  };
+}, []);
+
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (page === "detail-rt" && !selectedRT) {
+    setPage("struktur-rt");
+  }
+}, [page, selectedRT]);
 
   return (
     <div
