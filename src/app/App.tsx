@@ -1,6 +1,7 @@
 import { loadWebsite } from "../services/api";
 import { SHEETS } from "../config/sheets";
 import React, { useState, useEffect } from "react"
+import { Play } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
@@ -88,12 +89,16 @@ type Pengumuman = {
 }
 
 type Album = {
-  id: number
-  nama: string
-  cover: string
-  jumlah: number
-  tanggal: string
-  fotos: string[]
+  id: number;
+  nama: string;
+  tanggal: string;
+  jumlah: number;
+  cover: string;
+  fotos: {
+    type: "image" | "video";
+    url: string;
+    thumbnail: string;
+  }[];
 }
 
 type Penduduk = {
@@ -106,61 +111,6 @@ type Penduduk = {
   pekerjaan: string
   generasi: string
 }
-
-const GALERI_ALBUM: Album[] = [
-  {
-    id: 1, nama: "Kegiatan Agustusan 2025", tanggal: "17 Agustus 2025", jumlah: 24,
-    cover: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1540479859555-17af45c78602?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-  {
-    id: 2, nama: "Gotong Royong Juli 2026", tanggal: "15 Juli 2026", jumlah: 18,
-    cover: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-  {
-    id: 3, nama: "Wisata Alam Padukuhan", tanggal: "Juni 2026", jumlah: 32,
-    cover: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1573790387438-4da905039392?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-  {
-    id: 4, nama: "Posyandu Rutin", tanggal: "Juli 2026", jumlah: 15,
-    cover: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-  {
-    id: 5, nama: "Infrastruktur Padukuhan", tanggal: "2025–2026", jumlah: 20,
-    cover: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-  {
-    id: 6, nama: "Pelatihan & Edukasi", tanggal: "2026", jumlah: 12,
-    cover: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop&auto=format",
-    fotos: [
-      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&h=800&fit=crop&auto=format",
-    ],
-  },
-]
 
 const RT_LIST: RT[] = [
   { id: "01", ketua: "Suwardi Priyanto", hp: "0812-3456-7890", kk: 68, penduduk: 245, laki: 122, perempuan: 123, dusun: "Kutu Tegal Barat", deskripsi: "RT 01 meliputi wilayah Kutu Tegal Barat, dikenal dengan semangat gotong royong yang tinggi dan aktif dalam berbagai kegiatan padukuhan." },
@@ -1839,12 +1789,33 @@ function GaleriPage({
           <button onClick={e => { e.stopPropagation(); prev() }} className="absolute left-4 sm:left-6 w-11 h-11 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/25 transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <img
-            src={selectedAlbum.fotos[lightboxIdx]}
-            alt={`${selectedAlbum.nama} foto ${lightboxIdx + 1}`}
-            className="max-w-[88vw] max-h-[85vh] object-contain rounded-2xl"
-            onClick={e => e.stopPropagation()}
-          />
+{selectedAlbum.fotos[lightboxIdx]?.type === "video" ? (
+  <div
+    className="max-w-[88vw] max-h-[85vh]"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <video
+      controls
+      autoPlay
+      playsInline
+      preload="metadata"
+      className="max-w-[88vw] max-h-[85vh] object-contain rounded-2xl"
+    >
+      <source
+        src={selectedAlbum.fotos[lightboxIdx].url}
+        type="video/mp4"
+      />
+      Browser Anda tidak mendukung video.
+    </video>
+  </div>
+) : (
+  <img
+    src={selectedAlbum.fotos[lightboxIdx].url}
+    alt={`${selectedAlbum.nama} media ${lightboxIdx + 1}`}
+    className="max-w-[88vw] max-h-[85vh] object-contain rounded-2xl"
+    onClick={(e) => e.stopPropagation()}
+  />
+)}
           <button onClick={e => { e.stopPropagation(); next() }} className="absolute right-4 sm:right-6 w-11 h-11 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/25 transition-colors">
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -1868,19 +1839,32 @@ function GaleriPage({
             </p>
           </div>
           <div className="columns-2 md:columns-3 gap-3 space-y-3">
-            {selectedAlbum.fotos.map((foto, i) => (
-              <div key={i} className="break-inside-avoid">
-                <button
-                  onClick={() => openLightbox(i)}
-                  className="group relative block w-full rounded-2xl overflow-hidden bg-[#EEF2FF]"
-                >
-                  <img src={foto} alt={`${selectedAlbum.nama} ${i + 1}`} className="w-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-[#243B88]/0 group-hover:bg-[#243B88]/40 transition-colors flex items-center justify-center">
-                    <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                </button>
-              </div>
-            ))}
+{selectedAlbum.fotos.map((media, i) => (
+  <div key={i} className="break-inside-avoid">
+    <button
+      onClick={() => openLightbox(i)}
+      className="group relative block w-full rounded-2xl overflow-hidden"
+    >
+<div className="relative">
+
+  <img
+    src={media.thumbnail}
+    alt={`${selectedAlbum.nama} ${i + 1}`}
+    className="w-full rounded-2xl"
+  />
+
+  {media.type === "video" && (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center">
+        <Play className="w-7 h-7 text-white fill-white" />
+      </div>
+    </div>
+  )}
+
+</div>
+    </button>
+  </div>
+))}
           </div>
         </div>
       ) : (
