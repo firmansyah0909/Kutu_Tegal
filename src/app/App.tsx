@@ -1763,8 +1763,10 @@ function GaleriPage({
   const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null)
   const [lightboxIdx, setLightboxIdx] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
-
-  const openLightbox = (idx: number) => { setLightboxIdx(idx); setLightboxOpen(true) }
+const openLightbox = (idx: number) => {
+  setLightboxIdx(idx);
+  setLightboxOpen(true);
+};
   const closeLightbox = () => setLightboxOpen(false)
   const prev = () => {
     if (!selectedAlbum) return
@@ -1827,19 +1829,30 @@ function GaleriPage({
           </button>
           <div className="mb-8">
             <h1 className="text-2xl font-extrabold text-[#1A2744]">{selectedAlbum.nama}</h1>
-            <p className="text-[#6172A0] text-sm mt-1 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" />{selectedAlbum.tanggal}
-              <span className="mx-2 text-[#C7D7FF]">·</span>
+<p className="text-[#6172A0] text-sm mt-1 flex items-center gap-1.5">
+  <Clock className="w-3.5 h-3.5" />
+  {new Date(selectedAlbum.tanggal).toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  })}
+  <span className="mx-2 text-[#C7D7FF]">·</span>
               <Camera className="w-3.5 h-3.5" />{selectedAlbum.jumlah} foto
             </p>
           </div>
           <div className="columns-2 md:columns-3 gap-3 space-y-3">
 {selectedAlbum.fotos.map((media, i) => (
   <div key={i} className="break-inside-avoid">
-    <button
-      onClick={() => openLightbox(i)}
-      className="group relative block w-full rounded-2xl overflow-hidden"
-    >
+<button
+  onClick={() => {
+    if (media.type === "video") {
+      window.open(media.url, "_blank");
+    } else {
+      openLightbox(i);
+    }
+  }}
+  className="group relative block w-full rounded-2xl overflow-hidden"
+>
 <div className="relative">
 
   <img
@@ -1880,7 +1893,7 @@ function GaleriPage({
           setSelectedAlbum({
             id: index,
             nama: album["Judul Album"],
-            tanggal: album.Tanggal,
+            tanggal: album["Tanggal"],
             jumlah: Number(album["Jumlah Foto"]),
             cover: album.Thumbnail,
             fotos: album.Foto || [],
@@ -1912,7 +1925,11 @@ function GaleriPage({
 
           <p className="text-[#6172A0] text-sm mt-1.5 flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
-            {album.Tanggal}
+            {new Date(album["Tanggal"]).toLocaleDateString("id-ID", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+})}
           </p>
 
         </div>
@@ -2391,8 +2408,6 @@ useEffect(() => {
   async function ambilData() {
     try {
       const data = await loadWebsite();
-
-      console.log("Website :", data);
 
       setWebsite(data);
 
