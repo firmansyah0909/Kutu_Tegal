@@ -829,7 +829,20 @@ function ProfilPage({
     profil["Misi 3"],
     profil["Misi 4"],
   ].filter(Boolean);
-const fileId = profil?.Foto?.match(/\/d\/([^/]+)/)?.[1];
+const isMobile = window.innerWidth < 768;
+
+console.log("window.innerWidth =", window.innerWidth);
+console.log("isMobile =", isMobile);
+console.log("Foto =", profil["Foto"]);
+console.log("Foto HP =", profil["Foto HP"]);
+
+const fotoUrl = isMobile
+  ? (profil["Foto HP"] || profil.Foto)
+  : profil.Foto;
+console.log(profil);
+console.log(fotoUrl);
+const fileId =
+  fotoUrl?.match(/[-\w]{25,}/)?.[0];
 
 const profilImage = fileId
   ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`
@@ -874,7 +887,7 @@ const profilImage = fileId
 <img
   src={profilImage}
   alt={profil["Nama Padukuhan"]}
-    className="absolute inset-0 w-full h-full object-cover opacity-30"
+    className="absolute inset-0 w-full h-full object-cover opacity-60"
   />
 
   <div className="absolute inset-0 bg-gradient-to-r from-[#0f1f4d] via-[#243B88]/90 to-transparent" />
